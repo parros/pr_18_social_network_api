@@ -1,8 +1,8 @@
-const { Schema, model } = require('mongoose')
+const { Schema, model, ObjectId } = require('mongoose')
 
 const reactionSchema = new Schema({
     reactionId: {
-
+        type: ObjectId
     },
     reactionBody: {
         type: String,
@@ -15,10 +15,14 @@ const reactionSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now,
-        get: formatDate
+        default: Date.now
     }
-})
+}, {
+    toObject:{
+        virtuals: true
+        }
+}
+)
 
 const thoughtSchema = new Schema({
     thoughtText: {
@@ -29,23 +33,30 @@ const thoughtSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now,
-        get: formatDate
+        default: Date.now
     },
     username: {
         type: String,
         required: true
     },
-    reactions:{
-        type: Array
+    reactions: [ reactionSchema ]
+}, {
+    toObject:{
+    virtuals: true
     }
 })
 
-function formatDate(date) {
-    const dateFormat = new Date(date)
-    const formatedDate = dateFormat.toDateString()
-    return formatedDate
-}
+thoughtSchema.virtual('formatDate')
+    .get(function () {
+        const dateFormat = new Date(this.createdAt)
+        return dateFormat
+    })
+
+reactionSchema.virtual('formatDate')
+    .get(function () {
+        const dateFormat = new Date(Date.now)
+        return dateFormat
+    })
 
 const Thought = model('Thought', thoughtSchema)
 
