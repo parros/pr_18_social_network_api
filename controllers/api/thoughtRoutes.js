@@ -1,6 +1,8 @@
 const router = require('express').Router()
 const { Thought } = require('../../models')
 
+console.log(Thought)
+
 router.post('/', async (req, res) => {
     try {
         const thought = await Thought.create(req.body)
@@ -10,7 +12,6 @@ router.post('/', async (req, res) => {
         console.log(err)
         res.status(500).send('Error creating thought')
     }
-
 })
 
 router.get('/', async (req, res) => {
@@ -21,7 +22,6 @@ router.get('/', async (req, res) => {
         console.log(err)
         res.status(500).send('Error finding thoughts')
     }
-
 })
 
 router.get('/:_id', async (req, res) => {
@@ -33,19 +33,28 @@ router.get('/:_id', async (req, res) => {
         console.log(err)
         res.status(500).send(`Error finding thought: ${_id}`)
     }
-
 })
 
 router.put('/:_id', async (req, res) => {
     const { _id } = req.params
     try {
-        const thought = await Thought.findByIdAndUpdate(_id, req.body)
+        const thought = await Thought.findByIdAndUpdate(_id, req.body, { new: true })
         res.json(thought)
     } catch(err) {
         console.log(err)
         res.status(500).send(`Error updating thought: ${_id}`)
     }
+})
 
+router.delete('/:_id', async (req, res) => {
+    const { _id } = req.params
+    try {
+        const thought = await Thought.findByIdAndDelete(_id)
+        res.json(thought)
+    } catch(err) {
+        console.log(err)
+        res.status(500).send(`Error deleting thought: ${_id}`)
+    }
 })
 
 
