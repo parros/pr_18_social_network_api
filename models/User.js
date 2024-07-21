@@ -12,6 +12,12 @@ const userSchema = new Schema({
         type: String,
         required: true,
         unique: true,
+        validate: {
+            validator: function(userEmail) {
+                return /^([a-zA-Z\d_\.+-]+)@([a-zA-Z\d\.-]+)\.([a-z\.]{2,6})$/g.test(userEmail)
+            },
+            message: props => `${props.value} is not a valid email!`
+        }
     },
     thoughts: [
         {
@@ -38,7 +44,5 @@ userSchema.virtual('friendCount')
     })
 
 const User = model('User', userSchema)
-
-
 
 module.exports = User

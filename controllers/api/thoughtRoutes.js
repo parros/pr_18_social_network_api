@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const { Thought, User } = require('../../models')
 
+// Creates a thought attached to a user
 router.post('/', async (req, res) => {
     const { userId } = req.body
     try {
@@ -15,6 +16,7 @@ router.post('/', async (req, res) => {
     }
 })
 
+// Find all thoughts
 router.get('/', async (req, res) => {
     try {
         const thoughts = await Thought.find()
@@ -25,6 +27,7 @@ router.get('/', async (req, res) => {
     }
 })
 
+// Find a single thought by its id
 router.get('/:thoughtId', async (req, res) => {
     const { thoughtId } = req.params
     try {
@@ -36,6 +39,7 @@ router.get('/:thoughtId', async (req, res) => {
     }
 })
 
+// Change the data of a thought
 router.put('/:thoughtId', async (req, res) => {
     const { thoughtId } = req.params
     try {
@@ -47,6 +51,7 @@ router.put('/:thoughtId', async (req, res) => {
     }
 })
 
+// Delete a thought by its id
 router.delete('/:thoughtId', async (req, res) => {
     const { thoughtId } = req.params
     try {
@@ -58,6 +63,7 @@ router.delete('/:thoughtId', async (req, res) => {
     }
 })
 
+// Adds reactions to thought posts
 router.post('/:thoughtId/reactions', async (req, res) => {
     const { thoughtId } = req.params
     try {
@@ -71,6 +77,7 @@ router.post('/:thoughtId/reactions', async (req, res) => {
     }
 })
 
+// Delete reaction by id on thought posts
 router.delete('/:thoughtId/reactions', async (req, res) => {
     const { thoughtId } = req.params
     const { reactionId } = req.body
