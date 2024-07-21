@@ -22,71 +22,71 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:_id', async (req, res) => {
-    const { _id } = req.params
+router.get('/:userId', async (req, res) => {
+    const { userId } = req.params
     try {
-        const user = await User.findById(_id)
+        const user = await User.findById(userId)
         res.json(user)
     } catch(err) {
         console.log(err)
-        res.status(500).send(`Error finding user: ${_id}`)
+        res.status(500).send(`Error finding user: ${userId}`)
     }
 })
 
-router.put('/:_id', async (req, res) => {
-    const { _id } = req.params
+router.put('/:userId', async (req, res) => {
+    const { userId } = req.params
     try {
-        const user = await User.findByIdAndUpdate(_id, req.body)
+        const user = await User.findByIdAndUpdate(userId, req.body)
         res.json(user)
     } catch(err) {
         console.log(err)
-        res.status(500).send(`Error updating user: ${_id}`)
+        res.status(500).send(`Error updating user: ${userId}`)
     }
 })
 
-router.delete('/:_id', async (req, res) => {
-    const { _id } = req.params
+router.delete('/:userId', async (req, res) => {
+    const { userId } = req.params
     try {
-        const user = await User.findByIdAndDelete(_id)
+        const user = await User.findByIdAndDelete(userId)
         res.json(user)
     } catch(err) {
         console.log(err)
-        res.status(500).send(`Error deleting user: ${_id}`)
+        res.status(500).send(`Error deleting user: ${userId}`)
     }
 })
 
-router.post('/:_id/friends/:_friend', async (req, res) => {
-    const { _id, _friend } = req.params
+router.post('/:userId/friends/:friendId', async (req, res) => {
+    const { userId, friendId } = req.params
     try {
-        const friend = await User.findById(_friend)
-        const user = await User.findById(_id)
-        if (user.friends.includes(friend._id.toString() === false)){
-            const friendId = friend._id.toString()
-            user.friends.push(friendId)
-            const updateFriends = await User.updateOne({_id: user._id}, {friends: user.friends})
-            res.json(user)
-        } else {
-            console.log(`${friend.username} is already a friend!`)
-            res.json(user)
-        }
+        const user = await User.findById(userId)
+        const friend = await User.findById(friendId)
+            if (user.friends.includes(friendId) === false){
+                user.friends.push(friend)
+                const updateFriends = await User.findByIdAndUpdate(userId, {friends: user.friends}, {new: true})
+                console.log(`${friend.username} added as a friend!`)
+                res.json(user)
+            } else {
+                console.log(`${friend.username} is already a friend!`)
+                res.json(user)
+            }
     } catch(err) {
         console.log(err)
-        res.status(500).send(`Error updating user: ${_id}`)
+        res.status(500).send(`Error updating user: ${userId}`)
     }
 })
 
-router.delete('/:_id/friends/:_friend', async (req, res) => {
-    const { _id, _friend } = req.params
+router.delete('/:userId/friends/:friendId', async (req, res) => {
+    const { userId, friendId } = req.params
     try {
-        const friend = await User.findById(_friend)
-        const user = await User.findById(_id)
-        const friendId = friend._id.toString()
+        const friend = await User.findById(friendId)
+        const user = await User.findById(userId)
+        const newFriendId = friend._id.toString()
         console.log(friendId)
-        await User.deleteOne({_id: user._id}, {friends: friendId})
+        await User.deleteOne({userId: user._id}, {friends: newFriendId})
         res.json(user)
     } catch(err) {
         console.log(err)
-        res.status(500).send(`Error updating user: ${_id}`)
+        res.status(500).send(`Error updating user: ${userId}`)
     }
 })
 

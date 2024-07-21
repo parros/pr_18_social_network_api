@@ -6,7 +6,6 @@ console.log(Thought)
 router.post('/', async (req, res) => {
     try {
         const thought = await Thought.create(req.body)
-        console.log(thought)
         res.json(thought)
     } catch(err) {
         console.log(err)
@@ -24,21 +23,21 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:_id', async (req, res) => {
-    const { _id } = req.params
+router.get('/:thoughtId', async (req, res) => {
+    const { thoughtId } = req.params
     try {
-        const thought = await Thought.findById(_id)
+        const thought = await Thought.findById(thoughtId)
         res.json(thought)
     } catch(err) {
         console.log(err)
-        res.status(500).send(`Error finding thought: ${_id}`)
+        res.status(500).send(`Error finding thought: ${thoughtId}`)
     }
 })
 
-router.put('/:_id', async (req, res) => {
-    const { _id } = req.params
+router.put('/:thoughtId', async (req, res) => {
+    const { thoughtId } = req.params
     try {
-        const thought = await Thought.findByIdAndUpdate(_id, req.body, { new: true })
+        const thought = await Thought.findByIdAndUpdate(thoughtId, req.body, { new: true })
         res.json(thought)
     } catch(err) {
         console.log(err)
@@ -46,16 +45,38 @@ router.put('/:_id', async (req, res) => {
     }
 })
 
-router.delete('/:_id', async (req, res) => {
-    const { _id } = req.params
+router.delete('/:thoughtId', async (req, res) => {
+    const { thoughtId } = req.params
     try {
-        const thought = await Thought.findByIdAndDelete(_id)
+        const thought = await Thought.findByIdAndDelete(thoughtId)
         res.json(thought)
     } catch(err) {
         console.log(err)
-        res.status(500).send(`Error deleting thought: ${_id}`)
+        res.status(500).send(`Error deleting thought: ${thoughtId}`)
     }
 })
 
+router.post('/:thoughtId/reactions', async (req, res) => {
+    const { thoughtId } = req.params
+    try {
+        const thought = await Thought.findById(thoughtId)
+        const reaction = await Thought.reaction.create(req.body)
+        res.json(reaction)
+    } catch(err) {
+        console.log(err)
+        res.status(500).send('Error creating thought')
+    }
+})
+
+router.delete('/:thoughtId/reactions', async (req, res) => {
+    const { thoughtId } = req.params
+    try {
+        const thought = await Thought.findByIdAndDelete(thoughtId)
+        res.json(thought)
+    } catch(err) {
+        console.log(err)
+        res.status(500).send(`Error deleting thought: ${thoughtId}`)
+    }
+})
 
 module.exports = router
