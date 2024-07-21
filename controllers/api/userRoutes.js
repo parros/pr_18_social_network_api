@@ -62,7 +62,7 @@ router.post('/:userId/friends/:friendId', async (req, res) => {
         const friend = await User.findById(friendId)
             if (user.friends.includes(friendId) === false){
                 user.friends.push(friend)
-                const updateFriends = await User.findByIdAndUpdate(userId, {friends: user.friends}, {new: true})
+                const updateFriends = await User.findByIdAndUpdate(userId, {friends: user.friends}, { new: true })
                 console.log(`${friend.username} added as a friend!`)
                 res.json(user)
             } else {
@@ -81,7 +81,6 @@ router.delete('/:userId/friends/:friendId', async (req, res) => {
         const friend = await User.findById(friendId)
         const user = await User.findById(userId)
         const newFriendId = friend._id.toString()
-        console.log(friendId)
         await User.deleteOne({userId: user._id}, {friends: newFriendId})
         res.json(user)
     } catch(err) {
