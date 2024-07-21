@@ -1,12 +1,14 @@
 const router = require('express').Router()
-const { Thought } = require('../../models')
-
-console.log(Thought)
+const { Thought, User } = require('../../models')
 
 router.post('/', async (req, res) => {
+    const { userId } = req.body
     try {
         const thought = await Thought.create(req.body)
-        res.json(thought)
+        const user = await User.findById(userId)
+        user.thoughts.push(thought)
+        const addThought = await User.findByIdAndUpdate(userId, {thoughts: user.thoughts}, { new: true })
+        res.json(user)
     } catch(err) {
         console.log(err)
         res.status(500).send('Error creating thought')
@@ -60,22 +62,26 @@ router.post('/:thoughtId/reactions', async (req, res) => {
     const { thoughtId } = req.params
     try {
         const thought = await Thought.findById(thoughtId)
-        const reaction = await Thought.reaction.create(req.body)
-        res.json(reaction)
+        thought.reactions.push(req.body)
+        const addThought = await Thought.findByIdAndUpdate(thoughtId, {reactions: thought.reactions}, { new: true })
+        res.json(thought)
     } catch(err) {
         console.log(err)
-        res.status(500).send('Error creating thought')
+        res.status(500).send('Error creating reaction')
     }
 })
 
 router.delete('/:thoughtId/reactions', async (req, res) => {
     const { thoughtId } = req.params
+    const { reactionId } = req.body
     try {
-        const thought = await Thought.findByIdAndDelete(thoughtId)
+        const thought = await Thought.findById(thoughtId)
+        const myReaction = thought.reactions.id(reactionId, { new: true }).deleteOne()
+        await thought.save()
         res.json(thought)
     } catch(err) {
         console.log(err)
-        res.status(500).send(`Error deleting thought: ${thoughtId}`)
+        res.status(500).send(`Error deleting reaction: ${thoughtId}`)
     }
 })
 
