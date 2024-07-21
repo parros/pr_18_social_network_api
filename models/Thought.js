@@ -50,6 +50,7 @@ const thoughtSchema = new Schema({
     id: false
 })
 
+// Getter format date for thoughtSchema and reactionSchema
 function formatTime(date) {
     const formatedDate = date.toDateString()
     return formatedDate

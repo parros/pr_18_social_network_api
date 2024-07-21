@@ -2,6 +2,7 @@ const router = require('express').Router()
 const { User } = require('../../models')
 const { updateSearchIndex } = require('../../models/User')
 
+// Create a new user
 router.post('/', async (req, res) => {
     try {
         const user = await User.create(req.body)
@@ -12,6 +13,7 @@ router.post('/', async (req, res) => {
     }
 })
 
+// Find all users
 router.get('/', async (req, res) => {
     try {
         const users = await User.find()
@@ -22,6 +24,7 @@ router.get('/', async (req, res) => {
     }
 })
 
+// Find a single user by id
 router.get('/:userId', async (req, res) => {
     const { userId } = req.params
     try {
@@ -33,6 +36,7 @@ router.get('/:userId', async (req, res) => {
     }
 })
 
+// Changes data on a user
 router.put('/:userId', async (req, res) => {
     const { userId } = req.params
     try {
@@ -44,6 +48,7 @@ router.put('/:userId', async (req, res) => {
     }
 })
 
+// Deletes a user
 router.delete('/:userId', async (req, res) => {
     const { userId } = req.params
     try {
@@ -55,6 +60,7 @@ router.delete('/:userId', async (req, res) => {
     }
 })
 
+// Adds another user to a user's friend list
 router.post('/:userId/friends/:friendId', async (req, res) => {
     const { userId, friendId } = req.params
     try {
@@ -71,10 +77,11 @@ router.post('/:userId/friends/:friendId', async (req, res) => {
             }
     } catch(err) {
         console.log(err)
-        res.status(500).send(`Error updating user: ${userId}`)
+        res.status(500).send(`Error adding friend: ${userId}`)
     }
 })
 
+// Deletes another user from a user's friend list
 router.delete('/:userId/friends/:friendId', async (req, res) => {
     const { userId, friendId } = req.params
     try {
@@ -85,7 +92,7 @@ router.delete('/:userId/friends/:friendId', async (req, res) => {
         res.json(user)
     } catch(err) {
         console.log(err)
-        res.status(500).send(`Error updating user: ${userId}`)
+        res.status(500).send(`Error deleting friend: ${userId}`)
     }
 })
 
