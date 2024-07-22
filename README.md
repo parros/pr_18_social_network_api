@@ -10,7 +10,7 @@ Don't forget to enter npm i on the command line to install code packages.
 
 ## Usage
 
-
+https://drive.google.com/file/d/17UE-dPppO2jhL_orM4fNZncvsBJS-BGn/view?usp=sharing
 Type node server.js on the command line to start up the social network API.
 
 ## Credits
